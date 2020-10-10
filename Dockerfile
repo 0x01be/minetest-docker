@@ -1,51 +1,32 @@
-FROM alpine
+FROM 0x01be/minetest:build as build
 
-ENV MINETEST_GAME_VERSION master
+FROM 0x01be/xpra
 
-RUN apk add --no-cache --virtual minitest-build-dependencies \
-    git \
-    build-base \
-    cmake \
-    irrlicht-dev \
-    bzip2-dev \
-    libpng-dev \
-    jpeg-dev \
-    libxxf86vm-dev \
-    mesa-dev \
-    sqlite-dev \
-    libogg-dev \
-    libvorbis-dev \
-    openal-soft-dev \
-    curl-dev \
-    freetype-dev \
-    zlib-dev \
-    gmp-dev \
-    jsoncpp-dev \
-    postgresql-dev \
-    luajit-dev \
+COPY --from=build /usr/local/bin/minetest /usr/bin/
+COPY --from=build /usr/local/share/minetest /usr/share/minetest
+
+USER root
+RUN apk add --no-cache --virtual minitest-runtime-dependencies \
+    irrlicht \
+    bzip2 \
+    libpng \
+    jpeg \
+    libxxf86vm \
+    mesa \
+    sqlite \
+    libogg \
+    libvorbis \
+    openal-soft \
+    libcurl \
+    freetype \
+    zlib \
+    gmp \
+    jsoncpp \
+    postgresql \
+    luajit \
     ca-certificates
 
-RUN git clone --depth=1 -b ${MINETEST_GAME_VERSION} https://github.com/minetest/minetest.git /usr/src/minetest
-RUN git clone --depth=1 -b ${MINETEST_GAME_VERSION} https://github.com/minetest/minetest_game.git /usr/src/minetest/games/minetest_game 
-RUN git clone --recursive https://github.com/jupp0r/prometheus-cpp/ /usr/src/prometheus-cpp
+USER xpra
 
-WORKDIR /usr/src/prometheus-cpp/build
-RUN cmake .. \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DCMAKE_BUILD_TYPE=Release \
-     -DENABLE_TESTING=0
-RUN make
-RUN make install
-
-WORKDIR /usr/src/minetest/build
-RUN cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SERVER=TRUE \
-    -DENABLE_PROMETHEUS=TRUE \
-    -DBUILD_UNITTESTS=FALSE \
-    -DBUILD_CLIENT=TRUE \
-    ..
-RUN make
-RUN make install
+ENV COMMAND "minitest"
 
