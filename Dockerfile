@@ -22,11 +22,13 @@ RUN apk add --no-cache --virtual minitest-runtime-dependencies \
     zlib \
     gmp \
     jsoncpp \
-    postgresql \
     luajit \
+    postgresql-libs \
     ca-certificates
+
+RUN apk add mesa-dri-swrast
 
 USER xpra
 
-ENV COMMAND "minitest"
+ENV COMMAND "minetest"
 
