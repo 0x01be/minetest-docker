@@ -2,8 +2,6 @@ FROM alpine
 
 ENV MINETEST_GAME_VERSION master
 
-WORKDIR /usr/src/
-
 RUN apk add --no-cache --virtual minitest-build-dependencies \
     git \
     build-base \
@@ -27,7 +25,7 @@ RUN apk add --no-cache --virtual minitest-build-dependencies \
     luajit-dev \
     ca-certificates
 
-RUN git clone --depth=1 -b ${MINETEST_GAME_VERSION} https://github.com/minetest/minetest_game.git /usr/src/minetest
+RUN git clone --depth=1 -b ${MINETEST_GAME_VERSION} https://github.com/minetest/minetest.git /usr/src/minetest
 RUN git clone --depth=1 -b ${MINETEST_GAME_VERSION} https://github.com/minetest/minetest_game.git /usr/src/minetest/games/minetest_game 
 RUN git clone --recursive https://github.com/jupp0r/prometheus-cpp/ /usr/src/prometheus-cpp
 
