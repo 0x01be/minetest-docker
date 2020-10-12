@@ -1,4 +1,4 @@
-FROM alpine
+FROM arm32v6/alpine
 
 ENV MINETEST_GAME_VERSION master
 
