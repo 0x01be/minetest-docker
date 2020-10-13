@@ -24,9 +24,8 @@ RUN apk add --no-cache --virtual minitest-runtime-dependencies \
     jsoncpp \
     luajit \
     postgresql-libs \
-    ca-certificates
-
-RUN apk add mesa-dri-swrast
+    ca-certificates \
+    mesa-dri-swrast
 
 USER xpra
 
