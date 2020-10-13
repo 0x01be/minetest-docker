@@ -1,6 +1,6 @@
-FROM 0x01be/minetest:build as build
+FROM 0x01be/minetest:build-arm32v6 as build
 
-FROM 0x01be/xpra
+FROM 0x01be/xpra:arm32v6
 
 COPY --from=build /usr/local/bin/minetest /usr/bin/
 COPY --from=build /usr/local/share/minetest /usr/share/minetest
@@ -24,9 +24,8 @@ RUN apk add --no-cache --virtual minitest-runtime-dependencies \
     jsoncpp \
     luajit \
     postgresql-libs \
-    ca-certificates
-
-RUN apk add mesa-dri-swrast
+    ca-certificates \
+    mesa-dri-swrast
 
 USER xpra
 
